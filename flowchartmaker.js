@@ -286,8 +286,6 @@ function flowchartmaker() {
       });
       return v;
     }).get();
-    console.log(num_a);
-    console.log(void_a);
     // check row/column size.
     var max_a = {x: $.grep(num_a, function(e, i) { return (e != 0); }).length,
                  y: Math.max.apply(null, num_a)};
