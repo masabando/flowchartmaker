@@ -171,6 +171,7 @@ function flowchartmaker() {
     }
   }
   function smart_phone_init() {
+    content.css({'padding': '20px 0 0 0'});
     preview_container.css({
       'display': 'block',
       'width': '100%',
@@ -270,6 +271,9 @@ function flowchartmaker() {
                 function(ev){ ev.target.focus(); });
     $('#submit_button').on(click_event, function() {
       create_flowchart();
+      $('html,body').animate({
+        scrollTop: canvas_container.offset().top + "px"
+      }, 500, 'swing');
     });
   }
 
@@ -337,7 +341,7 @@ function flowchartmaker() {
     );
     itembuttons = $('.itembutton');
     itembuttons.each(function(i, b) {
-      $(b).click(function(e) {
+      $(b).on(click_event, function(e) {
         append_item($(this).attr("id").split("_")[1]);
       });
     });
