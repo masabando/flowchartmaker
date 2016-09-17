@@ -193,6 +193,7 @@ function flowchartmaker() {
     // var dw = $(window).innerWidth(), dh = $(window).innerHeight();
   }
   function pc_init() {
+    $('#statusbar').css('display', 'none');
     preview_container.css({
       'display': 'inline-block',
       'width': '50%',
