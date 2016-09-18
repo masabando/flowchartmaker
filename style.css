@@ -6,6 +6,7 @@ html {
   font-size: 10pt;
   overflow-y: scroll;
   background: #444;
+  font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
@@ -33,6 +34,8 @@ html {
   display: none;
 }
 #image {
+  min-width: 100px;
+  max-width: 100%;
 }
 
 /* [Main Frame] ============================================== */
@@ -48,15 +51,21 @@ html {
   border: 1px solid #ccc;
   text-align: center;
   vertical-align: top;
-  overflow-y: scroll;
+  overflow: scroll;
+  white-space: nowrap;
 }
+/* #flowchart_preview_container > div { */
+/*   width: 600px; */
+/*   min-height: 100%; */
+/* } */
 .flowchart_preview_container_line {
   display: inline-block;
   box-sizing: border-box;
   text-align: left;
-  width: 50%; min-height: 100%;
+  width: 180px; min-height: 100%;
   padding: 10px;
   vertical-align: top;
+  white-space: normal;
 }
 
 #flowchart_canvas_container {
@@ -70,7 +79,7 @@ html {
 
 /* [Preview Container] ======================================= */
 .pv_items {
-  display: inline-block;
+  display: block;
   box-sizing: border-box;
   background: #aaa;
   border: 1px solid #777;
@@ -82,21 +91,39 @@ html {
   z-index: 10;
 }
 .pv_items > div {
-  font-size: 12pt;
+ /* vertical-align: middle; */
+  display: block;
+  height: 16px; line-height: 16px;
+  font-size: 10pt;
   z-index: 11;
 }
 .itemclose_button {
   display: inline-block;
-  font-size: 11pt;
+  font-size: 8pt;
   font-weight: bold;
   float: right;
   border: 1px solid #888;
   background: #fdd; color: #c33;
+  margin: 0 0 0 4px;
   width: 20px;
-  vertical-align: middle;
 }
 .itemclose_button:hover {
   background: #faa;
+}
+
+.itemconnect_button {
+  text-align: center;
+  width: 20px;
+  float: right;
+  box-sizing: border-box;
+  display: inline-block;
+  font-size: 8pt;
+  cursor: pointer;
+  margin: 0 0 0 2px;
+  padding: 0 3px;
+  border: 1px solid #888;
+  font-weight: bold;
+  background: #88f; color: #66f;
 }
 
 .pv_text {
@@ -125,8 +152,11 @@ html {
 }
 
 #menu_window_title {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
   text-align: center;
-  padding: 2px 0;
+  padding: 4px 0;
   color: #eef;
   font-weight: bold;
 }
@@ -173,7 +203,7 @@ textarea, .pv_text {
   font-weight: bold;
   border: 1px solid #aaa;
   text-align: center;
-  width: 100%; height: 26px; line-height: 26px;
+  width: 100%; height: 36px; line-height: 36px;
   margin: 4px 0;
   box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
   color: #000; background: #eef;

@@ -1,6 +1,7 @@
 
 function flowchartmaker() {
-  var VERSION = "1.0";
+  var VERSION = "1.2";
+  var LINENUM = 3;
   var button_linenum = 4;
   var itemprop = {width: 360, height: 120, xmargin: 40, ymargin: 40,
                   padding: 20, fsize: 42, font: "sans-serif"};
@@ -19,6 +20,7 @@ function flowchartmaker() {
        var w = itemprop.width, h = itemprop.height;
        var m = ~~(h/12);
        var r = h*0.5 - m;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.arc(r, h/2, r, deg2rad(90), deg2rad(270));
        ctx.lineTo(w-r, m);
@@ -27,6 +29,7 @@ function flowchartmaker() {
        ctx.fill();
        filltext(ctx, str, w/2, h/2);
        ctx.stroke();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
     end:
     ["end", "end", "end",
@@ -34,6 +37,7 @@ function flowchartmaker() {
        var w = itemprop.width, h = itemprop.height;
        var m = ~~(h/12);
        var r = h*0.5 - m;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.arc(r, h/2, r, deg2rad(90), deg2rad(270));
        ctx.lineTo(w-r, m);
@@ -42,6 +46,7 @@ function flowchartmaker() {
        ctx.fill();
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
     terminal:
     ["term", "terminal", "",
@@ -49,6 +54,7 @@ function flowchartmaker() {
        var w = itemprop.width, h = itemprop.height;
        var m = ~~(h/12);
        var r = h*0.5 - m;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.arc(r, h/2, r, deg2rad(90), deg2rad(270));
        ctx.lineTo(w-r, m);
@@ -57,11 +63,13 @@ function flowchartmaker() {
        ctx.fill();
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
     process:
     ["proc", "process", "",
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.moveTo(0, 0);
        ctx.lineTo(w, 0);
@@ -71,16 +79,13 @@ function flowchartmaker() {
        ctx.fill();
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
-    decision:
-    ["deci", "decision", "",
+    ydecision:
+    ["deci-Y", "decisionY", "",
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
-       ctx.beginPath();
-       ctx.moveTo(w/2, h/2);
-       ctx.lineTo(w/2 + size.x, h/2);
-       ctx.lineTo(w/2 + size.x, h/2 + size.y);
-       ctx.stroke();
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.moveTo(w/2, 0);
        ctx.lineTo(w, h/2);
@@ -90,12 +95,40 @@ function flowchartmaker() {
        ctx.fill();
        ctx.stroke();
        filltext(ctx, str, w/2, h/2, ~~(0.9*itemprop.fsize));
+       ctx.save();
+       ctx.textAlign = "left";
+       filltext(ctx, ["Yes"], ~~(0.55*w), ~~(h+0.5*itemprop.ymargin),
+                ~~(0.8*itemprop.fsize));
+       ctx.restore();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
+     }],
+    ndecision:
+    ["deci-N", "decisionN", "",
+     function(ctx, str) {
+       var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.beginPath();
+       ctx.moveTo(w/2, 0);
+       ctx.lineTo(w, h/2);
+       ctx.lineTo(w/2, h);
+       ctx.lineTo(0, h/2);
+       ctx.closePath();
+       ctx.fill();
+       ctx.stroke();
+       filltext(ctx, str, w/2, h/2, ~~(0.9*itemprop.fsize));
+       ctx.save();
+       ctx.textAlign = "left";
+       filltext(ctx, ["No"], ~~(0.55*w), ~~(h+0.5*itemprop.ymargin),
+                ~~(0.8*itemprop.fsize));
+       ctx.restore();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
     io:
     ["I/O", "I/O", "",
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
        var m = ~~(h/12);
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.moveTo(0.5*h, m);
        ctx.lineTo(w, m);
@@ -105,12 +138,14 @@ function flowchartmaker() {
        ctx.fill();
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
     preparation:
     ["prep", "preparation", "",
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
        var m = ~~(h/24);
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
        ctx.moveTo(0, 0.5*h);
        ctx.lineTo(0.5*h, m);
@@ -122,24 +157,77 @@ function flowchartmaker() {
        ctx.fill();
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
-    returnline:
-    ["lconv", "leftconv", "",
+    ljoin:
+    ["-->┃", "join-L", "",
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
        ctx.beginPath();
-       ctx.moveTo(0.5*w, 0.5*h);
-       ctx.lineTo(0.5*w - size.x, 0.5*h);
+       ctx.moveTo(0, 0.5*h);
+       ctx.lineTo(w/2, 0.5*h);
        ctx.stroke();
        ctx.save();
        ctx.fillStyle = "#000000";
        ctx.beginPath();
-       ctx.moveTo(0.5*w - size.x, 0.5*h);
-       ctx.lineTo(0.5*w - size.x + 0.1*w, 0.5*h - 0.05*w);
-       ctx.lineTo(0.5*w - size.x + 0.1*w, 0.5*h + 0.05*w);
+       ctx.moveTo(0.5*w, 0.5*h);
+       ctx.lineTo(0.5*w - 0.1*w, 0.5*h - 0.05*w);
+       ctx.lineTo(0.5*w - 0.1*w, 0.5*h + 0.05*w);
        ctx.closePath();
        ctx.fill();
        ctx.restore();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
+     }],
+    rjoin:
+    ["┃<--", "join-R", "",
+     function(ctx, str) {
+       var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.beginPath();
+       ctx.moveTo(w, 0.5*h);
+       ctx.lineTo(w/2, 0.5*h);
+       ctx.stroke();
+       ctx.save();
+       ctx.fillStyle = "#000000";
+       ctx.beginPath();
+       ctx.moveTo(0.5*w, 0.5*h);
+       ctx.lineTo(0.5*w + 0.1*w, 0.5*h - 0.05*w);
+       ctx.lineTo(0.5*w + 0.1*w, 0.5*h + 0.05*w);
+       ctx.closePath();
+       ctx.fill();
+       ctx.restore();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
+     }],
+    lline:
+    ["┫", "line-L", "",
+     function(ctx, str) {
+       var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.beginPath();
+       ctx.moveTo(-itemprop.xmargin, 0.5*h);
+       ctx.lineTo(0.5*w, 0.5*h);
+       ctx.stroke();
+       ctx.save();
+       ctx.textAlign = "left";
+       filltext(ctx, str, 0, ~~(h/4), ~~(0.8*itemprop.fsize));
+       ctx.restore();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
+     }],
+    rline:
+    ["┣", "line-R", "",
+     function(ctx, str) {
+       var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.beginPath();
+       ctx.moveTo(w+itemprop.xmargin, 0.5*h);
+       ctx.lineTo(0.5*w, 0.5*h);
+       ctx.stroke();
+       ctx.save();
+       ctx.textAlign = "right";
+       filltext(ctx, str, w, ~~(h/4), ~~(0.8*itemprop.fsize));
+       ctx.restore();
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }],
     void:
     ["void", "", "", function(ctx, str) { }]
@@ -152,7 +240,7 @@ function flowchartmaker() {
   var menu_window = $('#menu_window');
   var menu_button_container = $('#menu_button_container');
   var preview_container = $('#flowchart_preview_container');
-  var preview_line = $('.flowchart_preview_container_line');
+  var preview_line;
   var canvas_container = $('#flowchart_canvas_container');
   // [Autoset Vars] ---------------------------------------------------
   var itembuttons;
@@ -197,12 +285,12 @@ function flowchartmaker() {
     preview_container.css({
       'display': 'inline-block',
       'width': '50%',
-      'height': '600px'
+      'height': '700px'
     });
     canvas_container.css({
       'display': 'inline-block',
       'width': '50%',
-      'height': '600px'
+      'height': '700px'
     });
     menu_window.css({
       'position': 'absolute',
@@ -242,14 +330,31 @@ function flowchartmaker() {
     $('<div class="pv_items noselect pv_item_' + key
       + '" data-key="' + key + '"></div>')
       .append('<div>' + itembuttons_alist[key][1]
-              + '<div class="itemclose_button button">x</div></div>')
+              + '<div class="itemclose_button button">X</div>'
+              + '<div class="itemconnect_button button">C</div>'
+              + '</div>')
       .append('<textarea class="pv_text"'
               + (key == 'void' ? ' disabled="disabled"' : "") + '">'
               + itembuttons_alist[key][2] + '</textarea>')
-      .appendTo('.flowchart_preview_container_line:first');
-    $('.itemclose_button').off(click_event, "**").on(click_event, function() {
+      .appendTo('.flowchart_preview_container_line:eq('
+                + ~~(preview_line.length/2) + ')')
+      .attr('data-connectflag', 1);
+    $('.itemclose_button').off(click_event).on(click_event, function() {
       $(this).parent().parent().remove();
       preview_line.sortable('refresh');
+    });
+    $('.itemconnect_button').off(click_event).on(click_event, function() {
+      var b = (+($(this).parent().parent().attr("data-connectflag"))+1) % 2;
+      $(this).parent().parent().attr("data-connectflag", b);
+      $(this).css(b == 1 ? {// on
+        'font-weight': 'bold',
+        'background': '#88f',
+        'color': '#66f'
+      } : {// off
+        'font-weight': 'normal',
+        'background': '#ccf',
+        'color': '#66b'
+      });
     });
     preview_line.sortable('refresh');
   }
@@ -258,6 +363,13 @@ function flowchartmaker() {
   function init() {
     agent_checker();
     footer.html("Flowchart Maker -- v." + VERSION)
+    preview_container.html("");
+    for (var i=LINENUM; i--;) {
+      preview_container.append(
+        '<div class="flowchart_preview_container_line"></div>'
+      );
+    }
+    preview_line = $('.flowchart_preview_container_line');
     create_itembuttons();
     if (smart_phone_flag) { smart_phone_init(); } else { pc_init(); }
     menu_window.draggable(menu_window_prop);
@@ -272,40 +384,79 @@ function flowchartmaker() {
                 function(ev){ ev.target.focus(); });
     $('#submit_button').on(click_event, function() {
       create_flowchart();
-      $('html,body').animate({
-        scrollTop: canvas_container.offset().top + "px"
-      }, 500, 'swing');
+      if (smart_phone_flag) {
+        $('html,body').animate({
+          scrollTop: canvas_container.offset().top + "px"
+        }, 500, 'swing');
+      }
     });
   }
 
   function create_flowchart() {
-    // check size of each line.
-    var num_a = preview_line.map(function(i, e) {
-      return $(this).children().length;
-    }).get();
-    var void_a = preview_line.map(function(i, e) {
-      var v = 0;
+    // first index
+    var fst_a = preview_line.map(function(i, e) {
+      var v = -1;
       $(this).children().each(function(j, c) {
-        if ($(this).attr('data-key') == "void") { v++; }
-        else { return false; }
+        if ($(this).attr('data-key') != "void") { v = j; return false; }
       });
       return v;
     }).get();
+    for (var i=fst_a.length; i--; ) {
+      fst_a[i] = (fst_a[i] == -1 ? null : fst_a[i]);
+    }
+    // last index
+    var lst_a = preview_line.map(function(i, e) {
+      var v = -1;
+      $($(this).children().get().reverse()).each(function(j, c) {
+        if ($(this).attr('data-key') != "void") {
+          v = $(e).children().length - (j+1); return false;
+        }
+      });
+      return v;
+    }).get();
+    for (var i=lst_a.length; i--; ) {
+      lst_a[i] = (lst_a[i] == -1 ? null : lst_a[i]);
+    }
+    // num of items
+    var num_a = preview_line.map(function(i, e) {
+      return fst_a[i] != null ? lst_a[i] - fst_a[i] + 1 : 0;
+    }).get();
+    if (Math.max.apply(null, num_a) == 0) { return false; }
     // check row/column size.
-    var max_a = {x: $.grep(num_a, function(e, i) { return (e != 0); }).length,
-                 y: Math.max.apply(null, num_a)};
-    if (max_a.x == 0 || max_a.y == 0) { return ; }
+    var rcsize = {
+      x: (function() {
+        var a = null, b = 0;
+        for (var i=0; i < num_a.length; i++) {
+          if (num_a[i] != 0) { a = i; break; }}
+        if (a == null) { return 0; }
+        for (var i=num_a.length; i--; ) {
+          if (num_a[i] != 0) { b = i; break; }}
+        return b - a + 1;
+        })(),
+      y: 1 + Math.max.apply(null, lst_a)
+        - Math.min.apply(null, $.map(fst_a, function(e, i) { return e; }))
+    };
+    // shift
+    var shift_a = {
+      x: (function() {
+        var z = 0;
+        for (var j=0; j<num_a.length; j++) { if(num_a[j] != 0) { z=j; break; }}
+        return z;
+      })(),
+      y: Math.min.apply(null, $.map(fst_a, function(e, i) { return e; }))
+    };
     // calc canvas size
-    var width = itemprop.width*max_a.x + itemprop.xmargin*(max_a.x - 1)
+    var width = itemprop.width*rcsize.x + itemprop.xmargin*rcsize.x
       + itemprop.padding*2;
-    var height = itemprop.height*max_a.y + itemprop.ymargin*(max_a.y - 1)
+    var height = itemprop.height*rcsize.y + itemprop.ymargin*rcsize.y
       + itemprop.padding*2;
     // size
     size = {x: itemprop.width + itemprop.xmargin,
             y: itemprop.height + itemprop.ymargin};
     canvas_container.html(
       '<canvas id="canvas" width="' + width + '" height="' + height + '"></canvas>'
-        + '<img id="image" width="' + ~~(width/2) + '" height="' + ~~(height/2) + '">'
+        //+ '<img id="image" width="' + ~~(width/2) + '" height="' + ~~(height/2) + '">'
+        + '<img id="image">'
     );
     var canvas = $('#canvas')[0];
     if ( !canvas || !canvas.getContext ) { return ; }
@@ -317,15 +468,24 @@ function flowchartmaker() {
     ctx.fillStyle = "#ffffff";
     ctx.translate(itemprop.padding, itemprop.padding);
     preview_line.each(function(x) {
-      ctx.beginPath();
-      ctx.moveTo(x*size.x + itemprop.width/2, void_a[x]*size.y + itemprop.height/2);
-      ctx.lineTo(x*size.x + itemprop.width/2, (num_a[x]-1)*size.y + itemprop.height/2);
-      ctx.closePath();
-      ctx.stroke();
+      if (num_a[x] == 0) { return true; }
       $(this).children('.pv_items').each(function(y) {
-        ctx.translate(x*size.x, y*size.y);
+        ctx.translate((x-shift_a.x)*size.x, (y-shift_a.y)*size.y);
+        if (+$(this).attr('data-connectflag')) {
+          ctx.beginPath();
+          ctx.moveTo(0.5*size.x, 0.5*size.y);
+          ctx.lineTo(0.5*size.x, -0.5*size.y);
+          ctx.stroke();
+        }
+        ctx.translate(-(x-shift_a.x)*size.x, -(y-shift_a.y)*size.y);
+      });
+    });
+    preview_line.each(function(x) {
+      if (num_a[x] == 0) { return true; }
+      $(this).children('.pv_items').each(function(y) {
+        ctx.translate((x-shift_a.x)*size.x, (y-shift_a.y)*size.y);
         itembuttons_alist[$(this).attr('data-key')][3](ctx, $(this).children(".pv_text").val().split('\n'));
-        ctx.translate(-x*size.x, -y*size.y);
+        ctx.translate(-(x-shift_a.x)*size.x, -(y-shift_a.y)*size.y);
       });
     });
     $('#image')[0].src = canvas.toDataURL();
