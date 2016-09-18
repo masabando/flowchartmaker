@@ -382,6 +382,21 @@ function flowchartmaker() {
     ctx.restore();
   }
 
+  function update_connectbutton_style() {
+    $('.itemconnect_button').each(function() {
+      var b = (+($(this).parent().parent().attr("data-connectflag")));
+      $(this).css(b == 1 ? {// on
+        'font-weight': 'bold',
+        'background': '#88f',
+        'color': '#66f'
+      } : {// off
+        'font-weight': 'normal',
+        'background': '#ccf',
+        'color': '#66b'
+      });
+    });
+  }
+
   function update_button_event() {
     $('.itemclose_button').off(click_event).on(click_event, function() {
       $(this).parent().parent().remove();
@@ -400,6 +415,7 @@ function flowchartmaker() {
         'color': '#66b'
       });
     });
+    update_connectbutton_style();
   }
 
   function refresh() { preview_line.sortable('refresh'); }
