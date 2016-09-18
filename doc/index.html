@@ -23,7 +23,27 @@
     <div id="statusbar"></div>
     <div id="header" class="noselect">Flowchart Maker</div>
     <div id="menu_window" class="noselect">
-      <div id="menu_window_title">Menu (Draggable!)</div>
+      <div id="menu_window_title">Menu (Drag Me!)</div>
+      <div id="menu_window_0">
+        <div id="output_button" class="button bbutton" title="現在の構造データを出力">Output</div>
+        <div id="load_button" class="button bbutton" title="構造データを入力">Input</div>
+        <div id="help_button" class="button bbutton" title="ヘルプ">Help</div>
+        <div id="allclear_button" class="button bbutton" title="全てのデータを削除">AC</div>
+      </div>
+      <div id="menu_window_2">
+        <div>
+          <div class="button sbutton" data-snum="1">Save1</div>
+          <div class="button sbutton" data-snum="2">Save2</div>
+          <div class="button sbutton" data-snum="3">Save3</div>
+          <div class="button sbutton" data-snum="4">Save4</div>
+        </div>
+        <div>
+          <div class="button lbutton" data-snum="1" data-ocp="0">Load1</div>
+          <div class="button lbutton" data-snum="2" data-ocp="0">Load2</div>
+          <div class="button lbutton" data-snum="3" data-ocp="0">Load3</div>
+          <div class="button lbutton" data-snum="4" data-ocp="0">Load4</div>
+        </div>
+      </div>
       <div id="menu_window_1">
         <div id="menu_button_container"></div>
         <div id="menu_submit_container">
@@ -34,7 +54,58 @@
     <div id="flowchart_preview_container" class="noselect">
     </div><div id="flowchart_canvas_container"></div>
     <div id="footer" class="noselect"></div>
+
+    <div id="modal_bg" class="noselect">
+      <div id="allclear_window" class="window noselect">
+        データを全消去しますか？
+        <div class="center">
+          <div id="allclear_yes_button" class="yes_button button"></div>
+          <div id="allclear_no_button" class="no_button button"></div>
+        </div>
+      </div>
+
+      <div id="output_window" class="window">
+        <div id="json_output" class="select"></div>
+        <div class="center">
+          <div id="output_OK_button" class="ok_button button"></div>
+        </div>
+      </div>
+
+      <div id="load_window" class="window">
+        <textarea name="json_load" id="json_load" class="select"></textarea>
+        <div class="center">
+          <div id="load_OK_button" class="ok_button button"></div>
+        </div>
+      </div>
+
+      <div id="help_window" class="window">
+        <div id="help_text">
+          [ヘルプ]<br><br>
+          フローチャートを作成できます。<br>
+          あまりバージョンの古いIEでは動きません。<br>
+          一切のデータをサーバに保存しません。<br>
+          <br>
+          1. メニューのボタンを押して、左フレームに適当に要素を作る。<br>
+          2. 左フレーム内で、要素をドラッグアンドドロップで並べかえる。<br>
+          3. createボタンを押すと右フレームに画像ができる。<br>
+          4. 右クリックから保存。<br>
+          <br>
+          ・Save1〜4のボタンを押すと、現在プレビュー中の構造をブラウザに保存します。<br>
+          ・Load1〜4のボタンを押すと、ブラウザに保存した構造を呼び出せます。<br>
+          ・Load1 にはサンプルのフローチャートをプリセットしています。<br>
+          <br>
+          [推奨環境]<br>
+          PC: firefox<br>
+        </div>
+        <div class="center">
+          <div id="help_OK_button" class="ok_button button"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </body>
 </html>
+
+

@@ -1,7 +1,9 @@
 
 function flowchartmaker() {
-  var VERSION = "1.2";
+  var APP_NAME = 'FlowchartMaker';
+  var VERSION = "1.3";
   var LINENUM = 3;
+  var FADE_WAIT = 200;
   var button_linenum = 4;
   var itemprop = {width: 360, height: 120, xmargin: 40, ymargin: 40,
                   padding: 20, fsize: 42, font: "sans-serif"};
@@ -14,6 +16,7 @@ function flowchartmaker() {
   };
 
   var itembuttons_alist = {
+    // key: [button_label, id, default-string, func]
     start:
     ["start", "start", "start",
      function(ctx, str) {
@@ -30,7 +33,7 @@ function flowchartmaker() {
        filltext(ctx, str, w/2, h/2);
        ctx.stroke();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "開始端子"],
     end:
     ["end", "end", "end",
      function(ctx, str) {
@@ -47,7 +50,7 @@ function flowchartmaker() {
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "終了端子"],
     terminal:
     ["term", "terminal", "",
      function(ctx, str) {
@@ -64,7 +67,7 @@ function flowchartmaker() {
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "一般端子"],
     process:
     ["proc", "process", "",
      function(ctx, str) {
@@ -80,7 +83,7 @@ function flowchartmaker() {
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "処理"],
     ydecision:
     ["deci-Y", "decisionY", "",
      function(ctx, str) {
@@ -101,7 +104,7 @@ function flowchartmaker() {
                 ~~(0.8*itemprop.fsize));
        ctx.restore();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "判断 (下がYes)"],
     ndecision:
     ["deci-N", "decisionN", "",
      function(ctx, str) {
@@ -122,7 +125,7 @@ function flowchartmaker() {
                 ~~(0.8*itemprop.fsize));
        ctx.restore();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "判断 (下がNo)"],
     io:
     ["I/O", "I/O", "",
      function(ctx, str) {
@@ -139,7 +142,7 @@ function flowchartmaker() {
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "入出力"],
     preparation:
     ["prep", "preparation", "",
      function(ctx, str) {
@@ -158,7 +161,7 @@ function flowchartmaker() {
        ctx.stroke();
        filltext(ctx, str, w/2, h/2);
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "準備"],
     ljoin:
     ["-->┃", "join-L", "",
      function(ctx, str) {
@@ -178,7 +181,7 @@ function flowchartmaker() {
        ctx.fill();
        ctx.restore();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "左から合流"],
     rjoin:
     ["┃<--", "join-R", "",
      function(ctx, str) {
@@ -198,7 +201,7 @@ function flowchartmaker() {
        ctx.fill();
        ctx.restore();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "右から合流"],
     lline:
     ["┫", "line-L", "",
      function(ctx, str) {
@@ -213,7 +216,7 @@ function flowchartmaker() {
        filltext(ctx, str, 0, ~~(h/4), ~~(0.8*itemprop.fsize));
        ctx.restore();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "左に線を伸ばす"],
     rline:
     ["┣", "line-R", "",
      function(ctx, str) {
@@ -228,9 +231,9 @@ function flowchartmaker() {
        filltext(ctx, str, w, ~~(h/4), ~~(0.8*itemprop.fsize));
        ctx.restore();
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
-     }],
+     }, "右に線を伸ばす"],
     void:
-    ["void", "", "", function(ctx, str) { }]
+    ["void", "", "", function(ctx, str) { }, "空"]
   };
 
   // [Selectors] ------------------------------------------------------
@@ -242,11 +245,23 @@ function flowchartmaker() {
   var preview_container = $('#flowchart_preview_container');
   var preview_line;
   var canvas_container = $('#flowchart_canvas_container');
+
+  var allclear_window = $('#allclear_window');
+  var help_window = $('#help_window');
+  var output_window = $('#output_window');
+  var load_window = $('#load_window');
+  var modal_bg = $('#modal_bg');
   // [Autoset Vars] ---------------------------------------------------
   var itembuttons;
   var click_event = 'click';
   var smart_phone_flag = false;
   var size;
+  var FMData_init = [[[],[],[]],
+                     [[],[["start","start",0],["process","a ← 3",1],["ydecision","a % 2 == 0",1],["io","a×3",1],["rjoin","",1],["end","end",1]],[["void","",0],["void","",0],["lline","No",0],["io","a + 2",1],["lline","",1]]],
+                     [[],[],[]],
+                     [[],[],[]],
+                     [[],[],[]]];
+  var FMData = JSON.parse(JSON.stringify(FMData_init));
 
   // [for smart phone] ------------------------------------------------
   function agent_checker() {
@@ -312,9 +327,50 @@ function flowchartmaker() {
   }
   // ------------------------------------------------------------------
 
-  function deg2rad(deg) {
-    return deg*Math.PI/180;
+  function save() {
+    localStorage.setItem(APP_NAME, JSON.stringify([VERSION, FMData]));
   }
+  function load() {
+    var ls_data = localStorage.getItem(APP_NAME);
+    if (!ls_data || JSON.parse(ls_data).length != 2) { allclear(false); }
+    else {
+      ls_data = JSON.parse(ls_data);
+      FMData = ls_data[1];
+      if (ls_data[0] != VERSION) {
+        alert("バージョンアップしました。\n("
+              + ls_data[0] + " --> " + VERSION + ")");
+        save();
+      }
+    }
+  }
+
+  function allclear(ask_flag) {
+    FMData = JSON.parse(JSON.stringify(FMData_init));
+    save();
+    update_loadbuttons();
+    update(0);
+    return false;
+  }
+
+  function show_window(wd) {
+    var w = $(window).width(), h = $(window).height();
+    var sw = wd.outerWidth(true), sh = wd.outerHeight(true);
+    wd.css({'left': ~~(0.5*(w-sw)) + 'px', 'top': ~~(0.5*(h-sh)) + 'px'});
+    wd.fadeIn(FADE_WAIT);
+  }
+
+  function update(num) {
+    var a = [];
+    preview_line.html("");
+    FMData[0] = JSON.parse(JSON.stringify(FMData[num]));
+    preview_line.each(function(i, l) {
+      $.each(FMData[0][i], function(j, c) { append_item(c[0], c[1], c[2], i, true); });
+    });
+    update_button_event();
+    refresh();
+  }
+
+  function deg2rad(deg) { return deg*Math.PI/180; }
 
   function filltext(ctx, str, x, y, fsize) {
     ctx.save();
@@ -326,19 +382,7 @@ function flowchartmaker() {
     ctx.restore();
   }
 
-  function append_item(key) {
-    $('<div class="pv_items noselect pv_item_' + key
-      + '" data-key="' + key + '"></div>')
-      .append('<div>' + itembuttons_alist[key][1]
-              + '<div class="itemclose_button button">X</div>'
-              + '<div class="itemconnect_button button">C</div>'
-              + '</div>')
-      .append('<textarea class="pv_text"'
-              + (key == 'void' ? ' disabled="disabled"' : "") + '">'
-              + itembuttons_alist[key][2] + '</textarea>')
-      .appendTo('.flowchart_preview_container_line:eq('
-                + ~~(preview_line.length/2) + ')')
-      .attr('data-connectflag', 1);
+  function update_button_event() {
     $('.itemclose_button').off(click_event).on(click_event, function() {
       $(this).parent().parent().remove();
       preview_line.sortable('refresh');
@@ -356,41 +400,29 @@ function flowchartmaker() {
         'color': '#66b'
       });
     });
-    preview_line.sortable('refresh');
   }
 
+  function refresh() { preview_line.sortable('refresh'); }
 
-  function init() {
-    agent_checker();
-    footer.html("Flowchart Maker -- v." + VERSION)
-    preview_container.html("");
-    for (var i=LINENUM; i--;) {
-      preview_container.append(
-        '<div class="flowchart_preview_container_line"></div>'
-      );
+  function append_item(key, loadstr, connectflag, _idx, norefresh) {
+    var idx = (_idx === false ? ~~(preview_line.length/2) : _idx);
+    $('<div class="pv_items noselect pv_item_' + key
+      + '" data-key="' + key + '"></div>')
+      .append('<div>' + itembuttons_alist[key][1]
+              + '<div class="itemclose_button button">X</div>'
+              + '<div class="itemconnect_button button">C</div>'
+              + '</div>')
+      .append('<textarea class="pv_text"'
+              + (key == 'void' ? ' disabled="disabled"' : "") + '">'
+              + (loadstr ? loadstr : itembuttons_alist[key][2]) + '</textarea>')
+      .appendTo('.flowchart_preview_container_line:eq(' + idx + ')')
+      .attr('data-connectflag', connectflag);
+    if (!norefresh) {
+      update_button_event();
+      refresh();
     }
-    preview_line = $('.flowchart_preview_container_line');
-    create_itembuttons();
-    if (smart_phone_flag) { smart_phone_init(); } else { pc_init(); }
-    menu_window.draggable(menu_window_prop);
-    preview_line.sortable({
-      cancel: '.button,textarea,input',
-      connectWith: '.flowchart_preview_container_line',
-      opacity: 0.7,
-      placeholder: 'ui-state-highlight'
-    })
-      .disableSelection()
-      .delegate('input,textarea', 'click',
-                function(ev){ ev.target.focus(); });
-    $('#submit_button').on(click_event, function() {
-      create_flowchart();
-      if (smart_phone_flag) {
-        $('html,body').animate({
-          scrollTop: canvas_container.offset().top + "px"
-        }, 500, 'swing');
-      }
-    });
   }
+
 
   function create_flowchart() {
     // first index
@@ -455,8 +487,7 @@ function flowchartmaker() {
             y: itemprop.height + itemprop.ymargin};
     canvas_container.html(
       '<canvas id="canvas" width="' + width + '" height="' + height + '"></canvas>'
-        //+ '<img id="image" width="' + ~~(width/2) + '" height="' + ~~(height/2) + '">'
-        + '<img id="image">'
+        + '<img id="image" title="右クリックで保存" alt="">'
     );
     var canvas = $('#canvas')[0];
     if ( !canvas || !canvas.getContext ) { return ; }
@@ -496,22 +527,224 @@ function flowchartmaker() {
     menu_button_container.append(
       $.map(itembuttons_alist, function(val, key) {
         i = (i + 1) % button_linenum;
-        return '<div id="itembutton_' + key + '", class="itembutton button">'
-          + val[0] + '</div>' + (i == 0 ? '<br>' : "");
+        return '<div id="itembutton_' + key
+          + '", class="itembutton button" title="'
+          + val[4] + '">' + val[0] + '</div>' + (i == 0 ? '<br>' : "");
       }).join("")
     );
     itembuttons = $('.itembutton');
     itembuttons.each(function(i, b) {
       $(b).on(click_event, function(e) {
-        append_item($(this).attr("id").split("_")[1]);
+        append_item($(this).attr("id").split("_")[1], false, 1, false, false);
       });
     });
   }
 
+  function get_data(num) {
+    FMData[num] = JSON.parse(JSON.stringify(FMData_init[num]));
+    preview_line.each(function(i) {
+      $(this).children('.pv_items').each(function() {
+        FMData[num][i].push([$(this).attr("data-key"),
+                             $(this).children('.pv_text').val(),
+                             +$(this).attr('data-connectflag')]);
+      });
+    });
+  }
+
+  function update_loadbuttons() {
+    var s = 0;
+    for (var i=1; i < FMData.length; i++) {
+      s = 0;
+      for (var j = 0; j < LINENUM; j++) {
+        s += FMData[i][j].length;
+      }
+      $('.lbutton').eq(i-1).attr("data-ocp", "" + (s == 0 ? 0 : 1))
+      .css(s == 0 ?
+           {'background': '#999'} :
+           {'background': '#ddf'});
+    }
+  }
+
+  function add_hook_buttons() {
+    $('#submit_button').on(click_event, function() {
+      create_flowchart();
+      get_data(0);
+      save();
+      if (smart_phone_flag) {
+        $('html,body').animate({
+          scrollTop: canvas_container.offset().top + "px"
+        }, 500, 'swing');
+      }
+    });
+    $('.sbutton').on(click_event, function(e) {
+      var i = +$(this).attr("data-snum");
+      $(this).blur();
+      get_data(i);
+      update_loadbuttons();
+      save();
+      e.stopPropagation();
+      return false;
+    });
+    $('.lbutton').on(click_event, function(e) {
+      $(this).blur();
+      update(+$(this).attr("data-snum"));
+      save();
+      create_flowchart();
+      e.stopPropagation();
+      return false;
+    });
+    $('#allclear_button').on(click_event, function(e) {
+      $(this).blur();
+      menu_window.hide();
+      modal_bg.fadeIn(FADE_WAIT);
+      show_window(allclear_window);
+      e.stopPropagation();
+      return false;
+    });
+    $('#allclear_yes_button').on(click_event, function(e) {
+      allclear_window.blur();
+      $(this).blur();
+      modal_bg.fadeOut(FADE_WAIT);
+      allclear_window.fadeOut(FADE_WAIT);
+      allclear(false);
+      menu_window.show();
+      e.stopPropagation();
+      return false;
+    });
+    $('#allclear_no_button').on(click_event, function(e) {
+      allclear_window.blur();
+      $(this).blur();
+      modal_bg.fadeOut(FADE_WAIT);
+      allclear_window.fadeOut(FADE_WAIT);
+      menu_window.show();
+      e.stopPropagation();
+      return false;
+    });
+    // load
+    $('#load_button').on(click_event, function(e) {
+      output_window.blur();
+      $(this).blur();
+      menu_window.hide();
+      $('#json_load').val("");
+      modal_bg.fadeIn(FADE_WAIT);
+      show_window(load_window);
+      e.stopPropagation();
+      return false;
+    });
+    $('#load_OK_button').on(click_event, function(e) {
+      output_window.blur();
+      $(this).blur();
+      menu_window.show();
+      if ($('#json_load').val() != "") {
+        FMData[0] = JSON.parse($('#json_load').val());
+        $('#json_load').val("");
+        update(0);
+      }
+      modal_bg.fadeOut(FADE_WAIT);
+      load_window.fadeOut(FADE_WAIT);
+      e.stopPropagation();
+      return false;
+    });
+    // output
+    $('#output_button').on(click_event, function(e) {
+      output_window.blur();
+      $(this).blur();
+      menu_window.hide();
+      get_data(0);
+      $('#json_output').html(JSON.stringify(FMData[0]));
+      modal_bg.fadeIn(FADE_WAIT);
+      show_window(output_window);
+      e.stopPropagation();
+      return false;
+    });
+    $('#output_OK_button').on(click_event, function(e) {
+      output_window.blur();
+      $(this).blur();
+      menu_window.show();
+      $('#json_output').html("");
+      modal_bg.fadeOut(FADE_WAIT);
+      output_window.fadeOut(FADE_WAIT);
+      e.stopPropagation();
+      return false;
+    });
+    $('#help_button').on(click_event, function(e) {
+      help_window.blur();
+      $(this).blur();
+      menu_window.hide();
+      modal_bg.fadeIn(FADE_WAIT);
+      show_window(help_window);
+      e.stopPropagation();
+      return false;
+    });
+    $('#help_OK_button').on(click_event, function(e) {
+      help_window.blur();
+      $(this).blur();
+      menu_window.show();
+      modal_bg.fadeOut(FADE_WAIT);
+      help_window.fadeOut(FADE_WAIT);
+      e.stopPropagation();
+      return false;
+    });
+    // modal-window
+    modal_bg.on(click_event, function(e) {
+      modal_bg.blur();
+      menu_window.show();
+      allclear_window.blur();
+      output_window.blur();
+      $('#json_output').html("");
+      modal_bg.fadeOut(FADE_WAIT);
+      allclear_window.fadeOut(FADE_WAIT);
+      output_window.fadeOut(FADE_WAIT);
+      load_window.fadeOut(FADE_WAIT);
+      help_window.fadeOut(FADE_WAIT);
+      e.stopPropagation();
+      return false;
+    });
+    $('.window').on(click_event, function(e) {
+      e.stopPropagation();
+    });
+  }
+
+  function create_preview_line() {
+    preview_container.html("");
+    for (var i=LINENUM; i--;) {
+      preview_container.append(
+        '<div class="flowchart_preview_container_line"></div>'
+      );
+    }
+    preview_line = $('.flowchart_preview_container_line');
+    preview_line.sortable({
+      cancel: '.button,textarea,input',
+      connectWith: '.flowchart_preview_container_line',
+      opacity: 0.7,
+      placeholder: 'ui-state-highlight'
+    })
+      .disableSelection()
+      .delegate('input,textarea', 'click',
+                function(ev){ ev.target.focus(); });
+  }
+
+  function init() {
+    footer.html("Flowchart Maker -- v." + VERSION)
+    $('.yes_button').html('はい');
+    $('.no_button').html('いいえ');
+    $('.ok_button').html('OK');
+    create_itembuttons();
+    if (smart_phone_flag) { smart_phone_init(); } else { pc_init(); }
+    menu_window.draggable(menu_window_prop);
+  }
 
   function go() {
+    agent_checker();
+    create_preview_line();
     init();
+    add_hook_buttons();
+    load();
+    update_loadbuttons();
+    update(0);
+    create_flowchart();
   }
+
   go();
 }
 

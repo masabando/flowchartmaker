@@ -8,7 +8,7 @@ html {
   background: #444;
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 #statusbar {
@@ -161,6 +161,15 @@ html {
   font-weight: bold;
 }
 
+#menu_window_0 {
+  padding: 7px 7px 4px 7px;
+  background: #bbf;
+}
+#menu_window_2 {
+  padding: 7px 7px 4px 7px;
+  background: #bbf;
+}
+
 #menu_window_1 {
   padding: 7px 7px 4px 7px;
   background: #ddf;
@@ -215,7 +224,134 @@ textarea, .pv_text {
   background: #aaf;
 }
 
+
+/* ============================================================ */
+#json_output {
+  /* display: none; */
+  display: block;
+  max-width: 96%;
+  background: #fff;
+  margin: 10px auto 0 auto;
+  border: 1px solid #aaa;
+  word-break: break-all;
+  text-align: left;
+}
+
+.window {
+  position: fixed;
+  min-width: 240px;
+  max-width: 96%;
+  z-index: 9999;
+  display: none;
+  background: #fff;
+  font-size: 9pt;
+  padding: 10px;
+  text-align: left;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  max-width: 80%;
+}
+
+#allclear_window {
+  text-align: center;
+}
+
+#output_window {
+  text-align: center;
+}
+
+#load_window {
+  box-sizing: border-box;
+  width: 96%;
+  text-align: center;
+}
+#json_load {
+  display: block;
+  height: 200px;
+  width: 98%;
+}
+
+#help_window {
+  text-align: center;
+}
+#help_text {
+  text-align: left;
+}
+
+/* button -------------------------------------------------- */
+.yes_button, .no_button, .ok_button {
+  width: 80px; height: 30px; line-height: 30px;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 10px 10px 10px 10px;
+  text-align: center;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+.yes_button {
+  border: 1px solid #f00;
+  background: #fdd;
+  color: #b00;
+}
+.no_button {
+  border: 1px solid #00f;
+  background: #ddf;
+  color: #00b;
+}
+.ok_button {
+  border: 1px solid #0a0;
+  background: #ada;
+  color: #080;
+}
+
+/* modal */
+#modal_bg {
+  z-index: 2000;
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 120%;
+  background: rgba(0,0,0,0.7);
+}
+
+/* [Button] =================================================== */
+#allclear_button { background: #fdd; color: #900; }
+#allclear_button:hover { background: #f99; color: #900; }
+div.bbutton {
+  display: inline-block;
+  text-align: center;
+  width: 55px;
+  height: 30px; line-height: 30px;
+  padding: 0;
+  font-size: 10pt;
+  background: #ddf;
+  border: 1px solid #999;
+  /* border-radius: 4px; */
+}
+div.bbutton:hover {
+  background: #99f;
+}
+
+.sbutton, .lbutton {
+  display: inline-block;
+  text-align: center;
+  width: 55px;
+  height: 30px; line-height: 30px;
+  padding: 0;
+  font-size: 10pt;
+  background: #ddf;
+  border: 1px solid #999;
+}
+.lbutton { margin-top: 4px; }
+.sbutton:hover, .lbutton:hover {
+  background: #99f;
+}
+
 /* [Misc] ===================================================== */
+
 .button {
   cursor: pointer;
   text-align: center;
@@ -230,3 +366,13 @@ textarea, .pv_text {
   -moz-user-select: none; -o-user-select: none;
   -webkit-user-select: none; -ms-user-select: none;
 }
+
+.select {
+  cursor: auto;
+  user-select: ; text;
+  -moz-user-select: text; -o-user-select: text;
+  -webkit-user-select: text; -ms-user-select: text;
+}
+
+.center { text-align: center; }
+.left { text-align: left; }
