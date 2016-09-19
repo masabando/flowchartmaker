@@ -46,9 +46,10 @@ html {
   min-width: 100px;
   max-width: 100%;
   cursor: auto;
-  user-select: ; all;
-  -moz-user-select: all; -o-user-select: all;
-  -webkit-user-select: all; -ms-user-select: all;
+  user-select: ; auto;
+  -moz-user-select: auto; -o-user-select: auto;
+  -webkit-user-select: auto; -ms-user-select: auto;
+  -webkit-touch-callout: default;
 }
 
 /* [Main Frame] ============================================== */

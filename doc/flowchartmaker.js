@@ -1,10 +1,11 @@
 
 function flowchartmaker() {
   var APP_NAME = 'FlowchartMaker';
-  var VERSION = "1.3";
+  var VERSION = "1.4";
   var LINENUM = 3;
   var FADE_WAIT = 200;
   var button_linenum = 4;
+  var imageurl_useBase64 = false;
   var itemprop = {width: 360, height: 120, xmargin: 40, ymargin: 40,
                   padding: 20, fsize: 42, itemlw: 4, lw: 3, font: "Roboto"};
   var menu_window_prop = {
@@ -266,6 +267,7 @@ function flowchartmaker() {
                      [[],[],[]],
                      [[],[],[]]];
   var FMData = JSON.parse(JSON.stringify(FMData_init));
+  var objurl, figbin, figbuf;
 
   // [for smart phone] ------------------------------------------------
   function agent_checker() {
@@ -543,7 +545,17 @@ function flowchartmaker() {
         ctx.translate(-(x-shift_a.x)*size.x, -(y-shift_a.y)*size.y);
       });
     });
-    $('#image')[0].src = canvas.toDataURL();
+    if (imageurl_useBase64) {
+      $('#image')[0].src = canvas.toDataURL();
+    } else {
+      if (objurl) { window.URL.revokeObjectURL(objurl); }
+      figbin = atob(canvas.toDataURL().split(',')[1]);
+      figbuf = new Uint8Array(figbin.length);
+      for (var i=0; i < figbin.length; i++) { figbuf[i] = figbin.charCodeAt(i); }
+      objurl = window.URL.createObjectURL(new Blob([figbuf.buffer],
+                                                       {type: 'image/png'}));
+      $('#image')[0].src = objurl;
+    }
   }
 
   function create_itembuttons() {
