@@ -163,6 +163,42 @@ function flowchartmaker() {
        filltext(ctx, str, w/2, h/2);
        ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
      }, "準備"],
+    loopstart:
+    ["loop-B", "loop", "",
+     function(ctx, str) {
+       var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.beginPath();
+       ctx.moveTo(h/2, 0);
+       ctx.lineTo(w - h/2, 0);
+       ctx.lineTo(w, h/3);
+       ctx.lineTo(w, h);
+       ctx.lineTo(0, h);
+       ctx.lineTo(0, h/3);
+       ctx.closePath();
+       ctx.fill();
+       ctx.stroke();
+       filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
+     }, "ループ開始"],
+    loopend:
+    ["loop-E", "loop-End", "",
+     function(ctx, str) {
+       var w = itemprop.width, h = itemprop.height;
+       ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.beginPath();
+       ctx.moveTo(0, 0);
+       ctx.lineTo(w, 0);
+       ctx.lineTo(w, h - h/3);
+       ctx.lineTo(w - h/2, h);
+       ctx.lineTo(h/2, h);
+       ctx.lineTo(0, h - h/3);
+       ctx.closePath();
+       ctx.fill();
+       ctx.stroke();
+       filltext(ctx, str, w/2, h/2);
+       ctx.translate(-itemprop.xmargin/2, -itemprop.ymargin/2);
+     }, "ループ終了"],
     ljoin:
     ["-->┃", "join-L", "",
      function(ctx, str) {
