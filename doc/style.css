@@ -1,3 +1,6 @@
+
+@import 'https://fonts.googleapis.com/css?family=Amiri|Roboto';
+
 html, body, div, table, tr, td, span, h1, h2 {
   margin: 0; padding: 0;
 }
@@ -6,9 +9,10 @@ html {
   font-size: 10pt;
   overflow-y: scroll;
   background: #444;
-  font-family: sans-serif;
+  font-family: "Roboto","Lucida Sans Unicode","メイリオ",Meiryo,"ＭＳ Ｐゴシック",Helvetica,Arial,Verdana,sans-serif;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
 }
 
 #statusbar {
@@ -20,14 +24,19 @@ html {
 }
 
 #header {
+  font-family: 'Amiri',Georgia,"ＭＳ Ｐ明朝","MS P Mincho",serif;
+  font-size: 30pt;
   text-align: center;
-  font-size: 26pt;
-  padding: 10px 0 20px 0;
+  padding: 10px 0 10px 0;
+  background: #eee; color: #333;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 #footer {
+  font-family: 'Amiri',Georgia,"ＭＳ Ｐ明朝","MS P Mincho",serif;
   background: #bbb;
-  padding: 2px 0 2px 20px;
+  padding: 2px 0 1px 20px;
 }
 
 #canvas {
@@ -36,6 +45,10 @@ html {
 #image {
   min-width: 100px;
   max-width: 100%;
+  cursor: auto;
+  user-select: ; all;
+  -moz-user-select: all; -o-user-select: all;
+  -webkit-user-select: all; -ms-user-select: all;
 }
 
 /* [Main Frame] ============================================== */
@@ -211,7 +224,8 @@ textarea, .pv_text {
 #submit_button {
   display: inline-block;
   box-sizing: border-box;
-  font-weight: bold;
+  font-size: 13pt;
+  /* font-weight: bold; */
   border: 1px solid #aaa;
   text-align: center;
   width: 100%; height: 36px; line-height: 36px;

@@ -6,7 +6,7 @@ function flowchartmaker() {
   var FADE_WAIT = 200;
   var button_linenum = 4;
   var itemprop = {width: 360, height: 120, xmargin: 40, ymargin: 40,
-                  padding: 20, fsize: 42, font: "sans-serif"};
+                  padding: 20, fsize: 42, itemlw: 4, lw: 3, font: "Roboto"};
   var menu_window_prop = {
     containment: "#Flowchartmaker",
     cancel: "input,textarea,button,select,option,.button,#menu_window_1",
@@ -167,11 +167,12 @@ function flowchartmaker() {
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
        ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.save();
+       ctx.lineWidth = itemprop.lw;
        ctx.beginPath();
        ctx.moveTo(0, 0.5*h);
        ctx.lineTo(w/2, 0.5*h);
        ctx.stroke();
-       ctx.save();
        ctx.fillStyle = "#000000";
        ctx.beginPath();
        ctx.moveTo(0.5*w, 0.5*h);
@@ -187,11 +188,12 @@ function flowchartmaker() {
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
        ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.save();
+       ctx.lineWidth = itemprop.lw;
        ctx.beginPath();
        ctx.moveTo(w, 0.5*h);
        ctx.lineTo(w/2, 0.5*h);
        ctx.stroke();
-       ctx.save();
        ctx.fillStyle = "#000000";
        ctx.beginPath();
        ctx.moveTo(0.5*w, 0.5*h);
@@ -207,11 +209,12 @@ function flowchartmaker() {
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
        ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.save();
+       ctx.lineWidth = itemprop.lw;
        ctx.beginPath();
        ctx.moveTo(-itemprop.xmargin, 0.5*h);
        ctx.lineTo(0.5*w, 0.5*h);
        ctx.stroke();
-       ctx.save();
        ctx.textAlign = "left";
        filltext(ctx, str, 0, ~~(h/4), ~~(0.8*itemprop.fsize));
        ctx.restore();
@@ -222,11 +225,12 @@ function flowchartmaker() {
      function(ctx, str) {
        var w = itemprop.width, h = itemprop.height;
        ctx.translate(itemprop.xmargin/2, itemprop.ymargin/2);
+       ctx.save();
+       ctx.lineWidth = itemprop.lw;
        ctx.beginPath();
        ctx.moveTo(w+itemprop.xmargin, 0.5*h);
        ctx.lineTo(0.5*w, 0.5*h);
        ctx.stroke();
-       ctx.save();
        ctx.textAlign = "right";
        filltext(ctx, str, w, ~~(h/4), ~~(0.8*itemprop.fsize));
        ctx.restore();
@@ -257,7 +261,7 @@ function flowchartmaker() {
   var smart_phone_flag = false;
   var size;
   var FMData_init = [[[],[],[]],
-                     [[],[["start","start",0],["process","a ← 3",1],["ydecision","a % 2 == 0",1],["io","a×3",1],["rjoin","",1],["end","end",1]],[["void","",0],["void","",0],["lline","No",0],["io","a + 2",1],["lline","",1]]],
+                     [[],[["start","start",0],["process","a ← 3",1],["ydecision","a % 2 == 0",1],["io","a × 3",1],["rjoin","",1],["end","end",1]],[["void","",0],["void","",0],["lline","No",0],["io","a + 2",1],["lline","",1]]],
                      [[],[],[]],
                      [[],[],[]],
                      [[],[],[]]];
@@ -509,11 +513,14 @@ function flowchartmaker() {
     if ( !canvas || !canvas.getContext ) { return ; }
     var ctx = canvas.getContext('2d');
     ctx.font = itemprop.fsize + "px " + itemprop.font;
+    ctx.lineWidth = itemprop.itemlw
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "#ffffff";
     ctx.translate(itemprop.padding, itemprop.padding);
+    ctx.save();
+    ctx.lineWidth = itemprop.lw
     preview_line.each(function(x) {
       if (num_a[x] == 0) { return true; }
       $(this).children('.pv_items').each(function(y) {
@@ -527,6 +534,7 @@ function flowchartmaker() {
         ctx.translate(-(x-shift_a.x)*size.x, -(y-shift_a.y)*size.y);
       });
     });
+    ctx.restore();
     preview_line.each(function(x) {
       if (num_a[x] == 0) { return true; }
       $(this).children('.pv_items').each(function(y) {
